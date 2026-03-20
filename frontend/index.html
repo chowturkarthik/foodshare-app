@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FoodShare</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">🍱 FoodShare</div>
+    <div class="nav-right">
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+      <button id="loginBtn">Login</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Donate Food, Save Lives</h1>
+    <p>Connect leftover food with nearby orphanages in Andhra Pradesh</p>
+
+    <div class="search-box">
+      <input
+        type="text"
+        id="citySearch"
+        placeholder="Enter city (Tirupati, Puttur...)"
+        list="citySuggestions"
+      />
+      <datalist id="citySuggestions"></datalist>
+      <button id="searchBtn">Find Orphanages</button>
+      <button id="locationBtn">Use My Location</button>
+    </div>
+
+    <p id="statusMessage" class="status-message"></p>
+  </header>
+
+  <main>
+    <section class="results-section">
+      <h2>Nearby Orphanages</h2>
+      <div id="results" class="results"></div>
+    </section>
+
+    <section class="register-section">
+      <h2>Register New Orphanage</h2>
+      <form id="registerForm">
+        <input type="text" id="orphanageName" placeholder="Orphanage Name" />
+        <input type="text" id="orphanageCity" placeholder="City" list="citySuggestions" />
+        <input type="text" id="orphanagePhone" placeholder="Phone Number" />
+        <input type="text" id="orphanageAddress" placeholder="Address" />
+        <button type="submit">Register Orphanage</button>
+      </form>
+      <p id="formMessage" class="form-message"></p>
+    </section>
+
+    <section class="map-section">
+      <h2>Your Location / Nearby Area</h2>
+      <iframe
+        id="mapFrame"
+        title="Google Map"
+        width="100%"
+        height="400"
+        style="border:0;"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q=Andhra%20Pradesh&z=7&output=embed"
+      ></iframe>
+    </section>
+  </main>
+
+  <footer class="footer">
+    © 2026 FoodShare | Developed by C H Karthik
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
