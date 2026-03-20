@@ -20,6 +20,20 @@ const orphanageSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
+  },
+  message: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
+  isApproved: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true

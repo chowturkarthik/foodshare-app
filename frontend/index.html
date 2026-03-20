@@ -16,6 +16,12 @@
     </div>
   </nav>
 
+  <div id="adminPanel" style="display: none; background: white; margin: 20px auto; padding: 25px; border-radius: 14px; max-width: 1100px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);">
+    <h2>Admin Panel - Pending Orphanages</h2>
+    <div id="pendingList"></div>
+    <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer;">Logout</button>
+  </div>
+
   <header class="hero">
     <h1>Donate Food, Save Lives</h1>
     <p>Connect leftover food with nearby orphanages in Andhra Pradesh</p>
@@ -48,6 +54,7 @@
         <input type="text" id="orphanageCity" placeholder="City" list="citySuggestions" />
         <input type="text" id="orphanagePhone" placeholder="Phone Number" />
         <input type="text" id="orphanageAddress" placeholder="Address" />
+        <textarea id="orphanageMessage" placeholder="Additional message for admin (optional)" rows="3" style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; resize:vertical;"></textarea>
         <button type="submit">Register Orphanage</button>
       </form>
       <p id="formMessage" class="form-message"></p>

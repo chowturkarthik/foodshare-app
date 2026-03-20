@@ -1,0 +1,8 @@
+[build]
+  publish = "frontend"
+  command = "echo 'Deploying static frontend to Netlify...'"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

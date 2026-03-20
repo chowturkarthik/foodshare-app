@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const orphanageRoutes = require('./routes/orphanageRoutes');
+const authMiddleware = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,6 +15,13 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') res.sendStatus(200);
+  else next();
+});
 
 // MongoDB Connection
 mongoose.connect(process.env.DB_URI)
@@ -26,6 +34,7 @@ mongoose.connect(process.env.DB_URI)
 
 // Routes
 app.use('/api/orphanages', orphanageRoutes);
+app.use('/api/admin', authMiddleware, orphanageRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
