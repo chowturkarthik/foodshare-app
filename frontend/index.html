@@ -3,28 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FoodShare</title>
+  <title>🍱 FoodShare - Donate Food to Orphanages in AP</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <nav class="navbar">
-    <div class="logo">🍱 FoodShare</div>
+  <nav class="navbar" role="banner">
+    <div class="logo" aria-label="FoodShare Home">FoodShare</div>
     <div class="nav-right">
-      <input type="text" id="username" placeholder="Username" />
-      <input type="password" id="password" placeholder="Password" />
-      <button id="loginBtn">Login</button>
+      <input type="text" id="username" placeholder="Admin Username" aria-label="Admin username" />
+      <input type="password" id="password" placeholder="Password" aria-label="Admin password" />
+      <button id="loginBtn" aria-label="Admin Login">Login</button>
     </div>
   </nav>
 
-  <div id="adminPanel" style="display: none; background: white; margin: 20px auto; padding: 25px; border-radius: 14px; max-width: 1100px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);">
-    <h2>Admin Panel - Pending Orphanages</h2>
+  <div id="adminPanel" style="display: none;">
+    <h2>Admin Panel - Pending Orphanages 🔔</h2>
     <div id="pendingList"></div>
-    <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer;">Logout</button>
+    <button id="logoutBtn" aria-label="Logout">Logout</button>
   </div>
 
-  <header class="hero">
+  <header class="hero" role="banner">
     <h1>Donate Food, Save Lives</h1>
-    <p>Connect leftover food with nearby orphanages in Andhra Pradesh</p>
+    <p>Connect leftover food with nearby orphanages in Andhra Pradesh 🌟</p>
 
     <div class="search-box">
       <input
@@ -32,53 +33,61 @@
         id="citySearch"
         placeholder="Enter city (Tirupati, Puttur...)"
         list="citySuggestions"
+        aria-label="Search orphanages by city or phone"
       />
       <datalist id="citySuggestions"></datalist>
-      <button id="searchBtn">Find Orphanages</button>
-      <button id="locationBtn">Use My Location</button>
+      <button id="searchBtn" aria-label="Search orphanages">Search</button>
+      <button id="locationBtn" aria-label="Use current location">📍 Location</button>
     </div>
 
-    <p id="statusMessage" class="status-message"></p>
+    <p id="statusMessage" class="status-message" aria-live="polite"></p>
   </header>
 
   <main>
-    <section class="results-section">
-      <h2>Nearby Orphanages</h2>
-      <div id="results" class="results"></div>
+    <!-- Loading Skeleton for Results -->
+    <section class="results-section" aria-labelledby="results-heading">
+      <h2 id="results-heading">Nearby Orphanages 🍲</h2>
+      <div id="results" class="results">
+        <div class="card skeleton" style="height:280px;"><div class="skeleton" style="height:120px;"></div><div class="skeleton" style="height:20px;width:80%;margin:20px 0;"></div><div class="skeleton" style="height:15px;width:60%;"></div></div>
+        <div class="card skeleton" style="height:280px;"><div class="skeleton" style="height:120px;"></div><div class="skeleton" style="height:20px;width:80%;margin:20px 0;"></div><div class="skeleton" style="height:15px;width:60%;"></div></div>
+      </div>
     </section>
 
-    <section class="register-section">
-      <h2>Register New Orphanage</h2>
-      <form id="registerForm">
-        <input type="text" id="orphanageName" placeholder="Orphanage Name" />
-        <input type="text" id="orphanageCity" placeholder="City" list="citySuggestions" />
-        <input type="text" id="orphanagePhone" placeholder="Phone Number" />
-        <input type="text" id="orphanageAddress" placeholder="Address" />
-        <textarea id="orphanageMessage" placeholder="Additional message for admin (optional)" rows="3" style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; resize:vertical;"></textarea>
-        <button type="submit">Register Orphanage</button>
+    <section class="register-section" aria-labelledby="register-heading">
+      <h2 id="register-heading">Register New Orphanage 🏠</h2>
+      <form id="registerForm" novalidate>
+        <input type="text" id="orphanageName" placeholder="Orphanage Name *" aria-label="Orphanage name (required)" required />
+        <input type="text" id="orphanageCity" placeholder="City *" list="citySuggestions" aria-label="City (required)" required />
+        <input type="tel" id="orphanagePhone" placeholder="Phone Number (10 digits) *" pattern="[0-9]{10}" aria-label="Phone 10 digits (required)" required />
+        <input type="text" id="orphanageAddress" placeholder="Full Address *" aria-label="Address (required)" required />
+        <textarea id="orphanageMessage" placeholder="Special message for admin (optional)" rows="4" aria-label="Additional message" maxlength="500"></textarea>
+        <button type="submit" id="submitBtn">Submit Registration</button>
       </form>
-      <p id="formMessage" class="form-message"></p>
+      <p id="formMessage" class="form-message" aria-live="polite"></p>
     </section>
 
-    <section class="map-section">
-      <h2>Your Location / Nearby Area</h2>
+    <section class="map-section" aria-labelledby="map-heading">
+      <h2 id="map-heading">Map View 📍</h2>
       <iframe
         id="mapFrame"
-        title="Google Map"
+        title="Google Map - Andhra Pradesh Orphanages"
         width="100%"
-        height="400"
+        height="450"
         style="border:0;"
         loading="lazy"
         allowfullscreen
         referrerpolicy="no-referrer-when-downgrade"
-        src="https://maps.google.com/maps?q=Andhra%20Pradesh&z=7&output=embed"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126776.76930506907!2d79.74004615!3d14.435800779905785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb5fbcff3c5d373%3A0xbecf1d7d288a9c5e!2sAndhra%20Pradesh!5e0!3m2!1sen!2sin!4v1729617893090!5m2!1sen!2sin"
       ></iframe>
     </section>
   </main>
 
   <footer class="footer">
-    © 2026 FoodShare | Developed by C H Karthik
+    © 2024 FoodShare | Connecting Food Donors with Orphanages in Andhra Pradesh | Developed with ❤️ by BLACKBOXAI & C H Karthik
   </footer>
+
+  <!-- Mobile FAB -->
+  <button class="fab" id="fab" title="Register Orphanage" aria-label="Quick register">add</button>
 
   <script src="script.js"></script>
 </body>
