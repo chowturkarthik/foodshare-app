@@ -1,16 +1,16 @@
-# Backend Fix TODO - Make FoodShare App Fully Working
+# IMPLEMENTATION TODO: Add Orphanages & GitHub Connection (chowturkarthik/foodshare-app)
 
-## Completed Steps
-- [x] 1. Created backend/.env with MongoDB config
-- [x] 2. Created backend/models/Orphanage.js Mongoose model
-- [x] 3. Created backend/routes/orphanageRoutes.js with GET/POST API
-- [x] 4. Created backend/server.js with Express + Mongoose setup
+## Phase 1: Seed Data 
+- [ ] 1. Create backend/seedOrphanages.js 
+- [ ] 2. Run: cd backend && node seedOrphanages.js
+- [ ] 3. Verify API returns 5 orphanages
 
-## Remaining Steps
-- [x] 5. cd backend && npm install
-- [x] 6. npm install complete, up to date
-- [x] 7. Killed process on port 5000 (PID 18604)
-- [x] 8. Backend server running on http://localhost:5000 ✅ MongoDB connected ✅
-- [x] 9. Frontend ready - data flow works end-to-end
-- [ ] 10. To test: Open http://localhost:5000 (API check), then open frontend/index.html in browser
-- [ ] 11. Register orphanages, search cities, call phones - data persists in MongoDB
+## Phase 2: GitHub 
+- [ ] 4. git remote add origin https://github.com/chowturkarthik/foodshare-app.git
+- [ ] 5. git add . && git commit -m "feat: add sample orphanages"
+- [ ] 6. git push -u origin main
+
+## Phase 3: Test
+- [ ] 7. Frontend: open index.html → search cities → see samples
+- [ ] 8. Register new orphanage → persists
+
