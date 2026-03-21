@@ -18,9 +18,23 @@
   </nav>
 
   <div id="adminPanel" style="display: none;">
-    <h2>Admin Panel - Pending Orphanages 🔔</h2>
-    <div id="pendingList"></div>
-    <button id="logoutBtn" aria-label="Logout">Logout</button>
+    <div id="adminTabs" style="text-align:center;margin-bottom:20px;">
+      <button onclick="showTab('orphanages')" class="admin-tab active">🏛️ Orphanages</button>
+      <button onclick="showTab('users')" class="admin-tab">👤 Users</button>
+      <button onclick="hideAdminPanel()" class="admin-tab-home">🏠 Home</button>
+    </div>
+    <h2 id="adminTitle">Admin Panel</h2>
+    <div id="orphanageTab">
+      <h3>Pending Orphanages 🔔</h3>
+      <div id="orphanagePendingList"></div>
+    </div>
+    <div id="userTab" style="display:none;">
+      <h3>Pending Users 👥</h3>
+      <div id="userPendingList"></div>
+    </div>
+    <div style="margin-top:20px;">
+      <button id="logoutBtn" aria-label="Logout">Logout</button>
+    </div>
   </div>
 
   <header class="hero" role="banner">
@@ -66,6 +80,19 @@
       <p id="formMessage" class="form-message" aria-live="polite"></p>
     </section>
 
+    <section class="register-section" aria-labelledby="donor-heading">
+      <h2 id="donor-heading">Register as Food Donor 👤</h2>
+      <form id="donorForm" novalidate>
+        <input type="text" id="donorName" placeholder="Full Name *" required />
+        <input type="email" id="donorEmail" placeholder="Email *" type="email" required />
+        <input type="tel" id="donorPhone" placeholder="Phone (10 digits) *" pattern="[0-9]{10}" required />
+        <input type="text" id="donorAddress" placeholder="Address *" required />
+        <textarea id="donorMessage" placeholder="Message for admin (optional)" rows="4" maxlength="500"></textarea>
+        <button type="submit" id="donorSubmitBtn">Register as Donor</button>
+      </form>
+      <p id="donorFormMessage" class="form-message" aria-live="polite"></p>
+    </section>
+
     <section class="map-section" aria-labelledby="map-heading">
       <h2 id="map-heading">Map View 📍</h2>
       <iframe
@@ -77,7 +104,7 @@
         loading="lazy"
         allowfullscreen
         referrerpolicy="no-referrer-when-downgrade"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126776.76930506907!2d79.74004615!3d14.435800779905785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb5fbcff3c5d373%3A0xbecf1d7d288a9c5e!2sAndhra%20Pradesh!5e0!3m2!1sen!2sin!4v1729617893090!5m2!1sen!2sin"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=76.0%2C12.0%2C85.0%2C19.0&amp;layer=mapnik&amp;marker=14.4358%2C79.7400"
       ></iframe>
     </section>
   </main>

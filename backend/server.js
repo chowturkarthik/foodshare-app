@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const orphanageRoutes = require('./routes/orphanageRoutes');
+const userRoutes = require('./routes/userRoutes');
 const authMiddleware = require('./middleware/auth');
 
 const app = express();
@@ -34,7 +35,9 @@ mongoose.connect(process.env.DB_URI)
 
 // Routes
 app.use('/api/orphanages', orphanageRoutes);
-app.use('/api/admin', authMiddleware, orphanageRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/admin/orphanages', authMiddleware, orphanageRoutes);
+app.use('/api/admin/users', authMiddleware, userRoutes);
 
 // Basic route
 app.get('/', (req, res) => {

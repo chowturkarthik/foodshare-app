@@ -1,4 +1,78 @@
 const API_BASE = "http://localhost:5000/api/orphanages";
+
+// Fallback orphanages for demo/offline (your data)
+const fallbackOrphanages = [
+  {
+    _id: "demo1",
+    name: "Sunrise Children Home",
+    city: "Tirupati",
+    phone: "9123456780",
+    address: "Leela Mahal Circle, Tirupati"
+  },
+  {
+    _id: "demo2",
+    name: "Sai Ananda Orphanage",
+    city: "Tirupati",
+    phone: "9345678901",
+    address: "KT Road, Tirupati"
+  },
+  {
+    _id: "demo3",
+    name: "Little Hearts Shelter",
+    city: "Puttur",
+    phone: "9012345678",
+    address: "Railway Station Road, Puttur"
+  },
+  {
+    _id: "demo4",
+    name: "Grace Children Care",
+    city: "Puttur",
+    phone: "9876543210",
+    address: "Bazaar Street, Puttur"
+  },
+  {
+    _id: "demo5",
+    name: "Hope Nest Home",
+    city: "Vijayawada",
+    phone: "9988776655",
+    address: "Benz Circle, Vijayawada"
+  },
+  {
+    _id: "demo6",
+    name: "Bright Future Home",
+    city: "Guntur",
+    phone: "9445566778",
+    address: "Arundelpet, Guntur"
+  },
+  {
+    _id: "demo7",
+    name: "Mother Care Shelter",
+    city: "Guntur",
+    phone: "9001122334",
+    address: "Brodipet, Guntur"
+  },
+  {
+    _id: "demo8",
+    name: "Helping Angels Home",
+    city: "Nellore",
+    phone: "9334455667",
+    address: "Magunta Layout, Nellore"
+  },
+  {
+    _id: "demo9",
+    name: "Mercy Children Trust",
+    city: "Nellore",
+    phone: "9112233445",
+    address: "Stonehousepet, Nellore"
+  },
+  {
+    _id: "demo10",
+    name: "New Life Kids Home",
+    city: "Kurnool",
+    phone: "9223344556",
+    address: "Nandyal Road, Kurnool"
+  }
+];
 // Deploy: const API_BASE = "https://your-render-backend.onrender.com/api/orphanages";
 
 const resultsDiv = document.getElementById("results");
@@ -24,6 +98,13 @@ const orphanagePhone = document.getElementById("orphanagePhone");
 const orphanageAddress = document.getElementById("orphanageAddress");
 const orphanageMessage = document.getElementById("orphanageMessage");
 const submitBtn = document.getElementById("submitBtn");
+
+const donorName = document.getElementById("donorName");
+const donorEmail = document.getElementById("donorEmail");
+const donorPhone = document.getElementById("donorPhone");
+const donorAddress = document.getElementById("donorAddress");
+const donorMessage = document.getElementById("donorMessage");
+const donorSubmitBtn = document.getElementById("donorSubmitBtn");
 
 let allOrphanages = [];
 let token = localStorage.getItem('adminToken') || null;
@@ -58,7 +139,7 @@ function hideSkeletons() {
   skeletons.forEach(s => s.style.display = 'none');
 }
 
-function validateForm() {
+function validateOrphanageForm() {
   let valid = true;
   [orphanageName, orphanageCity, orphanagePhone, orphanageAddress].forEach(input => {
     if (!input.value.trim()) {
@@ -70,6 +151,23 @@ function validateForm() {
   });
   if (orphanagePhone.value && !/^[0-9]{10}$/.test(orphanagePhone.value)) {
     orphanagePhone.classList.add('error');
+    valid = false;
+  }
+  return valid;
+}
+
+function validateDonorForm() {
+  let valid = true;
+  [donorName, donorEmail, donorPhone, donorAddress].forEach(input => {
+    if (!input.value.trim()) {
+      input.classList.add('error');
+      valid = false;
+    } else {
+      input.classList.remove('error');
+    }
+  });
+  if (donorPhone.value && !/^[0-9]{10}$/.test(donorPhone.value)) {
+    donorPhone.classList.add('error');
     valid = false;
   }
   return valid;
@@ -164,14 +262,26 @@ async function loadOrphanages() {
   showSkeleton();
   try {
     const res = await fetch(API_BASE);
+    if (!res.ok) throw new Error('API error');
     const data = await res.json();
-    allOrphanages = data;
-    updateCitySuggestions(data);
-    renderOrphanages(data);
-    statusMessage.textContent = `${data.length} orphanages ready to receive food donations! 🍚`;
-    statusMessage.className = 'status-message success';
+    if (data.length === 0) {
+      statusMessage.textContent = 'No orphanages in DB yet. Using demo data. Register new ones!';
+      statusMessage.className = 'status-message warning';
+      allOrphanages = fallbackOrphanages;
+    } else {
+      allOrphanages = data;
+      statusMessage.textContent = `${data.length} orphanages ready to receive food donations! 🍚`;
+      statusMessage.className = 'status-message success';
+    }
+    updateCitySuggestions(allOrphanages);
+    renderOrphanages(allOrphanages);
   } catch (error) {
-    resultsDiv.innerHTML = '<div style="text-align:center;padding:60px;color:#FF6B35;"><p>🔌 Backend not running?<br>Start: cd backend && npm start</p></div>';
+    console.log('API unavailable, using fallback data');
+    allOrphanages = fallbackOrphanages;
+    statusMessage.textContent = `${fallbackOrphanages.length} demo orphanages loaded (backend offline). Start server for real data!`;
+    statusMessage.className = 'status-message warning';
+    updateCitySuggestions(allOrphanages);
+    renderOrphanages(allOrphanages);
   }
 }
 
@@ -252,7 +362,7 @@ searchBtn.addEventListener("click", () => {
   statusMessage.textContent = `Found ${filtered.length} results for "${citySearch.value}"`;
   statusMessage.className = 'status-message success';
   renderOrphanages(filtered);
-  mapFrame.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6d4tuOYcIMb0H5M&q=${encodeURIComponent(citySearch.value)}`;
+  mapFrame.src = `https://www.openstreetmap.org/export/embed.html?bbox=78.0%2C13.0%2C80.5%2C15.0&layer=mapnik&marker=13.6%2C79.4&q=${encodeURIComponent(citySearch.value)}`;
 });
 
 locationBtn.addEventListener("click", () => {
@@ -265,7 +375,7 @@ locationBtn.addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
       const {latitude, longitude} = pos.coords;
-      mapFrame.src = `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6d4tuOYcIMb0H5M&center=${latitude},${longitude}&zoom=13`;
+mapFrame.src = `https://www.google.com/maps/embed/v1/view?center=${latitude},${longitude}&zoom=13&maptype=satellite`;
       statusMessage.textContent = `Your location set! Found ${allOrphanages.length} nearby`;
       statusMessage.className = 'status-message success';
       renderOrphanages(allOrphanages);
@@ -307,11 +417,11 @@ logoutBtn.addEventListener("click", () => {
   showToast('Logged out successfully');
 });
 
-registerForm.addEventListener("input", validateForm);
+registerForm.addEventListener("input", validateOrphanageForm);
 
 registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (!validateForm()) {
+  if (!validateOrphanageForm()) {
     formMessage.textContent = 'Please fill all required fields correctly';
     formMessage.className = 'form-message error';
     return;
@@ -343,7 +453,7 @@ registerForm.addEventListener("submit", async (e) => {
       formMessage.textContent = '✅ Submitted! Admin will approve soon';
       formMessage.className = 'form-message success';
       registerForm.reset();
-      if (token) loadPending();
+      if (token) loadOrphanagePending();
       loadOrphanages();
       showToast('Registration sent for approval! 🎉');
     }
@@ -355,14 +465,182 @@ registerForm.addEventListener("submit", async (e) => {
   }
 });
 
+donorForm.addEventListener("input", validateDonorForm);
+
+donorForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!validateDonorForm()) {
+    donorFormMessage.textContent = 'Please fill all required fields correctly';
+    donorFormMessage.className = 'form-message error';
+    return;
+  }
+  
+  const data = {
+    name: donorName.value.trim(),
+    email: donorEmail.value.trim(),
+    phone: donorPhone.value.trim(),
+    address: donorAddress.value.trim(),
+    message: donorMessage.value.trim()
+  };
+  
+  donorSubmitBtn.classList.add('loading');
+  donorFormMessage.textContent = 'Submitting for admin approval...';
+  donorFormMessage.className = 'form-message';
+  
+  try {
+    const res = await fetch('http://localhost:5000/api/users', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (!res.ok) {
+      donorFormMessage.textContent = result.message || 'Submission failed';
+      donorFormMessage.className = 'form-message error';
+    } else {
+      donorFormMessage.textContent = '✅ Submitted! Admin will approve soon';
+      donorFormMessage.className = 'form-message success';
+      donorForm.reset();
+      if (token) loadUserPending();
+      showToast('Donor registration sent for approval! 👤');
+    }
+  } catch (e) {
+    donorFormMessage.textContent = 'Server not available. Try later.';
+    donorFormMessage.className = 'form-message error';
+  } finally {
+    donorSubmitBtn.classList.remove('loading');
+  }
+});
+
 fab.addEventListener('click', () => {
   document.querySelector('.register-section').scrollIntoView({ behavior: 'smooth' });
   showToast('Scroll to register form 📝');
 });
 
+function hideAdminPanel() {
+  adminPanel.style.display = 'none';
+}
+
+function showTab(tabName) {
+  // Tab buttons
+  document.querySelectorAll('.admin-tab').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  // Content tabs
+  document.getElementById('orphanageTab').style.display = tabName === 'orphanages' ? 'block' : 'none';
+  document.getElementById('userTab').style.display = tabName === 'users' ? 'block' : 'none';
+  
+  document.getElementById('adminTitle').textContent = tabName === 'orphanages' ? 'Pending Orphanages 🔔' : 'Pending Users 👥';
+  
+  if (tabName === 'orphanages') {
+    loadOrphanagePending();
+  } else {
+    loadUserPending();
+  }
+}
+
+async function loadOrphanagePending() {
+  try {
+    const res = await fetch(`${API_BASE}/pending`, { headers: getAuthHeaders() });
+    const data = await res.json();
+    renderOrphanagePending(data);
+  } catch (error) {
+    document.getElementById('orphanagePendingList').innerHTML = "<p style='color:#FF6B35;'>Error loading orphanages (check token)</p>";
+  }
+}
+
+async function loadUserPending() {
+  try {
+    const res = await fetch('http://localhost:5000/api/admin/users/pending', { headers: getAuthHeaders() });
+    const data = await res.json();
+    renderUserPending(data);
+  } catch (error) {
+    document.getElementById('userPendingList').innerHTML = "<p style='color:#FF6B35;'>Error loading users (check token)</p>";
+  }
+}
+
+function renderOrphanagePending(data) {
+  const container = document.getElementById('orphanagePendingList');
+  container.innerHTML = "";
+  const badge = data.length > 0 ? `<span style="background:linear-gradient(135deg,#FF6B35,#F7931E);color:white;padding:8px 16px;border-radius:25px;font-size:14px;font-weight:600;">${data.length} Pending</span>` : '<span style="color:rgba(255,255,255,0.7);">No pending</span>';
+  container.innerHTML = `<h4>Orphanages ${badge}</h4>`;
+
+  data.forEach((o) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h4>${o.name} (${o.city}) 🏠</h4>
+      <p><strong>📞</strong> ${o.phone}</p>
+      <p><strong>📍</strong> ${o.address}</p>
+      <p><strong>💬</strong> ${o.message || 'No message'}</p>
+      <div style="margin-top:20px;">
+        <button onclick="approveOrphanage('${o._id}')" style="background:linear-gradient(135deg,#4ECDC4,#44A08D);margin-right:10px;">✅ Approve</button>
+        <button onclick="rejectOrphanage('${o._id}')" style="background:linear-gradient(135deg,#6C757D,#495057);">❌ Reject</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderUserPending(data) {
+  const container = document.getElementById('userPendingList');
+  container.innerHTML = "";
+  const badge = data.length > 0 ? `<span style="background:linear-gradient(135deg,#FF6B35,#F7931E);color:white;padding:8px 16px;border-radius:25px;font-size:14px;font-weight:600;">${data.length} Pending</span>` : '<span style="color:rgba(255,255,255,0.7);">No pending</span>';
+  container.innerHTML = `<h4>Users ${badge}</h4>`;
+
+  data.forEach((u) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h4>${u.name} 👤</h4>
+      <p><strong>📧</strong> ${u.email}</p>
+      <p><strong>📞</strong> ${u.phone}</p>
+      <p><strong>📍</strong> ${u.address}</p>
+      <p><strong>💬</strong> ${u.message || 'No message'}</p>
+      <div style="margin-top:20px;">
+        <button onclick="approveUser('${u._id}')" style="background:linear-gradient(135deg,#4ECDC4,#44A08D);margin-right:10px;">✅ Approve</button>
+        <button onclick="rejectUser('${u._id}')" style="background:linear-gradient(135deg,#6C757D,#495057);">❌ Reject</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+window.approveUser = async (id) => {
+  if (!token) return showToast('Login required', 'error');
+  try {
+    const res = await fetch(`http://localhost:5000/api/admin/users/${id}/approve`, {
+      method: 'PATCH',
+      headers: getAuthHeaders()
+    });
+    if (res.ok) {
+      loadUserPending();
+      showToast('✅ User approved');
+    }
+  } catch (error) {
+    showToast('Approve failed', 'error');
+  }
+};
+
+window.rejectUser = async (id) => {
+  if (!token) return showToast('Login required', 'error');
+  try {
+    const res = await fetch(`http://localhost:5000/api/admin/users/${id}/reject`, {
+      method: 'PATCH',
+      headers: getAuthHeaders()
+    });
+    if (res.ok) {
+      loadUserPending();
+      showToast('❌ User rejected');
+    }
+  } catch (error) {
+    showToast('Reject failed', 'error');
+  }
+};
+
 // Init
 loadOrphanages();
-setInterval(() => token && loadPending(), 30000);
+setInterval(() => token && loadOrphanagePending(), 30000);
 
 // PWA-ish offline handling
 window.addEventListener('online', loadOrphanages);
