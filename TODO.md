@@ -1,5 +1,16 @@
-# FoodShare Simple Light UI Redesign
-✅ 1. Rewrite style.css → Light clean theme (white/blue/gray)
-   2. Test: start frontend/index.html
-   3. Git commit & push blackboxai/push-new-code
-   4. gh pr create → Merge main/Netlify deploy ✓
+# Deployment Fix TODO - Cross-Device Access
+
+## Approved Plan Steps:
+
+### 1. [✅] Create TODO.md 
+### 2. [✅] Setup MongoDB Atlas cluster 
+### 3. [✅] Created .env files + render.yaml + Orphanage model ready
+### 4. [ ] Create production branch & commit changes
+### 5. [ ] Update backend/server.js CORS for Netlify domain
+### 6. [ ] Create .env.production & README.md instructions
+### 7. [ ] Git commit to blackboxai/fix-deployment branch
+### 8. [ ] gh pr create → merge & Netlify redeploy  
+### 9. [ ] Test cross-device + attempt_completion
+
+**Status: Waiting for MongoDB Atlas DB_URI from user...**
+

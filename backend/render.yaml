@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: foodshare-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DB_URI
+        sync: false
+      - key: JWT_SECRET
+        value: production-super-secret-jwt-change-2024
+      - key: NODE_ENV
+        value: production
