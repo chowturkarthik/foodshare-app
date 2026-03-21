@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api/orphanages";
+const API_BASE = "https://foodshare-app-5l58.onrender.com/api/orphanages";
 
 // Fallback orphanages for demo/offline (your data)
 const fallbackOrphanages = [
@@ -488,7 +488,7 @@ donorForm.addEventListener("submit", async (e) => {
   donorFormMessage.className = 'form-message';
   
   try {
-    const res = await fetch('http://localhost:5000/api/users', {
+const res = await fetch(`${API_BASE.replace('/api/orphanages', '/api/users')}`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
@@ -551,7 +551,7 @@ async function loadOrphanagePending() {
 
 async function loadUserPending() {
   try {
-    const res = await fetch('http://localhost:5000/api/admin/users/pending', { headers: getAuthHeaders() });
+const res = await fetch(`${API_BASE.replace('/api/orphanages', '/api/admin/users/pending')}`, { headers: getAuthHeaders() });
     const data = await res.json();
     renderUserPending(data);
   } catch (error) {
@@ -609,7 +609,7 @@ function renderUserPending(data) {
 window.approveUser = async (id) => {
   if (!token) return showToast('Login required', 'error');
   try {
-    const res = await fetch(`http://localhost:5000/api/admin/users/${id}/approve`, {
+const res = await fetch(`${API_BASE.replace('/api/orphanages', '/api/admin/users/${id}/approve')}`, {
       method: 'PATCH',
       headers: getAuthHeaders()
     });
@@ -625,7 +625,7 @@ window.approveUser = async (id) => {
 window.rejectUser = async (id) => {
   if (!token) return showToast('Login required', 'error');
   try {
-    const res = await fetch(`http://localhost:5000/api/admin/users/${id}/reject`, {
+const res = await fetch(`${API_BASE.replace('/api/orphanages', '/api/admin/users/${id}/reject')}`, {
       method: 'PATCH',
       headers: getAuthHeaders()
     });
