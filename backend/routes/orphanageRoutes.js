@@ -88,7 +88,7 @@ router.patch('/:id/reject', async (req, res) => {
 // POST /api/orphanages - Create new orphanage
 router.post('/', async (req, res) => {
   try {
-    const { name, city, phone, address } = req.body;
+    const { name, city, phone, address, message = '' } = req.body;
 
     // Basic validation
     if (!name || !city || !phone || !address) {
@@ -99,7 +99,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'Phone must be 10 digits' });
     }
 
-    const newOrphanage = new Orphanage({ name, city, phone, address });
+    const newOrphanage = new Orphanage({ name, city, phone, address, message });
     await newOrphanage.save();
 
     res.status(201).json({ 
@@ -111,7 +111,7 @@ router.post('/', async (req, res) => {
     if (error.name === 'ValidationError') {
       return res.status(400).json({ message: error.message });
     }
-    res.status(500).json({ message: 'Server error creating orphanage' });
+    res.status(500).json({ message: `Server error creating orphanage: ${error.message}` });
   }
 });
 
